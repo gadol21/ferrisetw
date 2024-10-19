@@ -498,6 +498,23 @@ impl private::TryParse<String> for Parser<'_, '_> {
                         sddl::convert_sid_to_string(prop_slice.buffer.as_ptr() as *const _)?;
                     Ok(string)
                 }
+                TdhInType::InTypeCountedAnsiString => {
+                    if prop_slice.buffer.len() < size_of::<u16>() {
+                        return Err(ParserError::PropertyError(
+                            "counted string is too short and missing character count".into(),
+                        )
+                        .into());
+                    }
+
+                    let (char_count, string) = prop_slice.buffer.split_at(size_of::<u16>());
+                    let char_count = u16::from_le_bytes(char_count.try_into()?) as usize;
+
+                    if string.len() > char_count {
+                        return Err(ParserError::PropertyError(format!("Counted string property has character count of {}, but only {} characters available", char_count, string.len())));
+                    }
+
+                    Ok(std::str::from_utf8(&string[..char_count])?.to_string())
+                }
                 TdhInType::InTypeCountedString => unimplemented!(),
                 _ => Err(ParserError::InvalidType),
             },
