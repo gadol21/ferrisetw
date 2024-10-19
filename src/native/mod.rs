@@ -16,6 +16,11 @@ pub use pla::PlaError;
 pub use sddl::SddlNativeError;
 pub use tdh::TdhNativeError;
 
+// TODO: Temporarily expose all of these in order to make Property exposed, we'll need to figure out what actually needs to be exposed
+pub use tdh_types::Property;
+pub use tdh_types::PropertyFlags;
+pub use tdh_types::PropertyInfo;
+
 // These are returned by some of our public APIs
 pub use etw_types::extended_data::EventHeaderExtendedDataItem;
 pub use etw_types::extended_data::ExtendedDataItem;

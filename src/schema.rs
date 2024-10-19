@@ -97,7 +97,7 @@ impl Schema {
     /// Parses the list of properties of the wrapped `TRACE_EVENT_INFO`
     ///
     /// This is parsed on first call, and cached for later use
-    pub(crate) fn properties(&self) -> &[Property] {
+    pub fn properties(&self) -> &[Property] {
         match self.try_properties() {
             Err(PropertyError::UnimplementedType(_)) => {
                 log::error!("Unable to list properties: a type is not implemented");
